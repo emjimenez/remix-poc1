@@ -1,0 +1,20 @@
+query posts {
+  poc1_posts {
+    title
+    body
+    status
+    id
+    is_public
+    created_at
+  }
+}
+
+query posts_by_id($id: Int!) {
+  poc1_posts_by_pk(id: $id) {
+    body
+    created_at
+    title
+    status
+    id
+  }
+}
