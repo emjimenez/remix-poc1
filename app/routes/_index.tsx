@@ -26,7 +26,7 @@ export default function Index() {
       <ul>
         {posts.poc1_posts.map((post) => (
           <li key={post.id}>
-            <a href={`/posts/${post.id}`}>{post.title}</a>
+            <a href={`/posts/${post.uri}`}>{post.title}</a>
           </li>
         ))}
       </ul>

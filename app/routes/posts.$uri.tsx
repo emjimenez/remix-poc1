@@ -1,18 +1,18 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import type { Posts_By_IdQuery } from "~/graphql/generated";
+import type { Poc1_Posts } from "~/graphql/generated";
 import { getPost } from "~/services/posts.service";
 
 export async function loader({
     params,
   }: LoaderFunctionArgs) {
-  const post = await getPost(Number(params.id))
-  return { post }
+  const posts = await getPost(params.uri || "")
+  return { post: posts.poc1_posts[0] }
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
-    { title: data?.post.poc1_posts_by_pk?.title },
+    { title: data?.post.title },
     { name: "description", content: "Welcome to POC Blog!" },
   ];
 };
@@ -20,14 +20,14 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export default function Index() {
   const { post } = useLoaderData<{
-    post: Posts_By_IdQuery
+    post: Poc1_Posts
   }>()
 
   return (
     <div>
-      <h1>{post.poc1_posts_by_pk?.title}</h1>
+      <h1>{post.title}</h1>
       <div>
-        {post.poc1_posts_by_pk?.body}
+        {post.body}
       </div>
     </div >
   );

@@ -7,9 +7,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-
 type GraphQLClientRequestHeaders = Headers | string[][] | Record<string, string>
-
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -239,6 +237,7 @@ export type Poc1_Posts = {
   is_public: Scalars['Boolean']['output'];
   status: Scalars['String']['output'];
   title: Scalars['String']['output'];
+  uri: Scalars['String']['output'];
   user_id: Scalars['String']['output'];
 };
 
@@ -289,13 +288,16 @@ export type Poc1_Posts_Bool_Exp = {
   is_public?: InputMaybe<Boolean_Comparison_Exp>;
   status?: InputMaybe<String_Comparison_Exp>;
   title?: InputMaybe<String_Comparison_Exp>;
+  uri?: InputMaybe<String_Comparison_Exp>;
   user_id?: InputMaybe<String_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "poc1_posts" */
 export enum Poc1_Posts_Constraint {
   /** unique or primary key constraint on columns "id" */
-  Poc1PostsPkey = 'poc1_posts_pkey'
+  Poc1PostsPkey = 'poc1_posts_pkey',
+  /** unique or primary key constraint on columns "uri" */
+  Poc1PostsUriKey = 'poc1_posts_uri_key'
 }
 
 /** input type for incrementing numeric columns in table "poc1_posts" */
@@ -311,6 +313,7 @@ export type Poc1_Posts_Insert_Input = {
   is_public?: InputMaybe<Scalars['Boolean']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+  uri?: InputMaybe<Scalars['String']['input']>;
   user_id?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -322,6 +325,7 @@ export type Poc1_Posts_Max_Fields = {
   id?: Maybe<Scalars['Int']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
+  uri?: Maybe<Scalars['String']['output']>;
   user_id?: Maybe<Scalars['String']['output']>;
 };
 
@@ -333,6 +337,7 @@ export type Poc1_Posts_Min_Fields = {
   id?: Maybe<Scalars['Int']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
+  uri?: Maybe<Scalars['String']['output']>;
   user_id?: Maybe<Scalars['String']['output']>;
 };
 
@@ -360,6 +365,7 @@ export type Poc1_Posts_Order_By = {
   is_public?: InputMaybe<Order_By>;
   status?: InputMaybe<Order_By>;
   title?: InputMaybe<Order_By>;
+  uri?: InputMaybe<Order_By>;
   user_id?: InputMaybe<Order_By>;
 };
 
@@ -383,6 +389,8 @@ export enum Poc1_Posts_Select_Column {
   /** column name */
   Title = 'title',
   /** column name */
+  Uri = 'uri',
+  /** column name */
   UserId = 'user_id'
 }
 
@@ -394,6 +402,7 @@ export type Poc1_Posts_Set_Input = {
   is_public?: InputMaybe<Scalars['Boolean']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+  uri?: InputMaybe<Scalars['String']['input']>;
   user_id?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -431,6 +440,7 @@ export type Poc1_Posts_Stream_Cursor_Value_Input = {
   is_public?: InputMaybe<Scalars['Boolean']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+  uri?: InputMaybe<Scalars['String']['input']>;
   user_id?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -454,6 +464,8 @@ export enum Poc1_Posts_Update_Column {
   Status = 'status',
   /** column name */
   Title = 'title',
+  /** column name */
+  Uri = 'uri',
   /** column name */
   UserId = 'user_id'
 }
@@ -801,14 +813,14 @@ export type Timestamptz_Comparison_Exp = {
 export type PostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PostsQuery = { __typename?: 'query_root', poc1_posts: Array<{ __typename?: 'poc1_posts', title: string, body: string, status: string, id: number, is_public: boolean, created_at: any }> };
+export type PostsQuery = { __typename?: 'query_root', poc1_posts: Array<{ __typename?: 'poc1_posts', title: string, body: string, status: string, id: number, is_public: boolean, uri: string, created_at: any }> };
 
-export type Posts_By_IdQueryVariables = Exact<{
-  id: Scalars['Int']['input'];
+export type Posts_By_UriQueryVariables = Exact<{
+  uri: Scalars['String']['input'];
 }>;
 
 
-export type Posts_By_IdQuery = { __typename?: 'query_root', poc1_posts_by_pk?: { __typename?: 'poc1_posts', body: string, created_at: any, title: string, status: string, id: number } | null };
+export type Posts_By_UriQuery = { __typename?: 'query_root', poc1_posts: Array<{ __typename?: 'poc1_posts', uri: string, body: string, created_at: any, id: number, is_public: boolean, status: string, title: string }> };
 
 
 export const PostsDocument = gql`
@@ -819,18 +831,21 @@ export const PostsDocument = gql`
     status
     id
     is_public
+    uri
     created_at
   }
 }
     `;
-export const Posts_By_IdDocument = gql`
-    query posts_by_id($id: Int!) {
-  poc1_posts_by_pk(id: $id) {
+export const Posts_By_UriDocument = gql`
+    query posts_by_uri($uri: String!) {
+  poc1_posts(where: {uri: {_eq: $uri}}) {
+    uri
     body
     created_at
-    title
-    status
     id
+    is_public
+    status
+    title
   }
 }
     `;
@@ -845,8 +860,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     posts(variables?: PostsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<PostsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<PostsQuery>(PostsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'posts', 'query');
     },
-    posts_by_id(variables: Posts_By_IdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<Posts_By_IdQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<Posts_By_IdQuery>(Posts_By_IdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'posts_by_id', 'query');
+    posts_by_uri(variables: Posts_By_UriQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<Posts_By_UriQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<Posts_By_UriQuery>(Posts_By_UriDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'posts_by_uri', 'query');
     }
   };
 }

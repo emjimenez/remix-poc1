@@ -5,16 +5,19 @@ query posts {
     status
     id
     is_public
+    uri
     created_at
   }
 }
 
-query posts_by_id($id: Int!) {
-  poc1_posts_by_pk(id: $id) {
+query posts_by_uri($uri: String!) {
+  poc1_posts(where: {uri: {_eq: $uri}}) {
+    uri
     body
     created_at
-    title
-    status
     id
+    is_public
+    status
+    title
   }
 }

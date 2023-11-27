@@ -9,7 +9,7 @@ export async function getPosts() {
   return posts
 }
 
-export async function getPost(id: number) {
-  const posts = await sdk.posts_by_id({ id: id }, headers);
+export async function getPost(uri: string) {
+  const posts = await sdk.posts_by_uri({ uri: uri }, headers);
   return posts
 }
