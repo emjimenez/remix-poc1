@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, Link } from "@remix-run/react";
 import type { Poc1_Posts } from "~/graphql/generated";
 import { getPost } from "~/services/posts.service";
 
@@ -24,9 +24,14 @@ export default function Index() {
   }>()
 
   return (
-    <div>
-      <h1>{post.title}</h1>
-      <div>
+    <div className="flex flex-col items-center m-4">
+      <header className="w-full p-4">
+        <Link to="/" className="font-bold">Home</Link>
+      </header>
+      <h1 className="text-3xl font-bold text-center m-4">
+        {post.title}
+      </h1>
+      <div className="prose max-w-none">
         {post.body}
       </div>
     </div >

@@ -21,15 +21,17 @@ export default function Index() {
   }>()
 
   return (
-    <div>
-      <h1>Posts</h1>
-      <ul>
+    <div className="flex justify-center m-4 flex-col">
+      <h1 className="text-3xl font-bold text-center m-4">
+        Posts
+      </h1>
+      <ul className="list-none">
         {posts.poc1_posts.map((post) => (
-          <li key={post.id}>
+          <li key={post.id} className="text-center">
             <a href={`/posts/${post.uri}`}>{post.title}</a>
           </li>
         ))}
       </ul>
-    </div >
+    </div>
   );
 }
